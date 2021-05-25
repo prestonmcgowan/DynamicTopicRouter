@@ -75,7 +75,7 @@ public final class DynamicTopicRouter {
             } catch (ExecutionException e) {
                 log.trace("I am at ExecutionException");
                 // exit early for almost all exceptions
-                if (! (e.getCause() instanceof UnknownTopicOrPartitionException)) {
+                if ((e.getCause() instanceof UnknownTopicOrPartitionException)) {
                     log.info("Topic not found: {}", topic);
                     exists = false;
                 } else {
@@ -160,9 +160,9 @@ public final class DynamicTopicRouter {
             builder.stream(inputTopicPattern, Consumed.with(Serdes.String(), Serdes.String()));
 
         jsonStream.to(
-            (key, value, recordContext) ->  {
+            (key, value, recordContext) ->  { // TopicNameExtractor
                 String customer = defaultValue;
-                //log.info("This messages recordContext: {}", recordContext);
+                log.trace("This messages recordContext: {}", recordContext);
                 try {
                     customer = JsonPath.parse(value).read(routeByJsonPath, String.class);
                 } catch(PathNotFoundException e) {
