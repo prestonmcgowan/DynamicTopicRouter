@@ -57,6 +57,8 @@ public final class DynamicTopicRouter {
     }
 
     private Boolean topicExists(String topic) {
+        // Code and inspiration from:
+        // https://github.com/gwenshap/kafka-examples/blob/master/AdminClientExample/src/main/java/org/example/AdminClientExample.java#L71-L103
         Boolean exists = true;
 
         if ( !availableDestinationTopics.containsKey(topic) ) {
@@ -178,10 +180,6 @@ public final class DynamicTopicRouter {
             },
             Produced.with(Serdes.String(), Serdes.String())
         );
-
-        //TODO: Handle UNKNOWN_TOPIC_OR_PARTITION when the topic does not exist
-        // https://github.com/gwenshap/kafka-examples/blob/master/AdminClientExample/src/main/java/org/example/AdminClientExample.java#L71-L103
-
         return builder.build();
     }
 
